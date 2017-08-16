@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "建寺义卖";
+    //ViewBag.BodyClass = "detail-body";
+}
+@section styles{
+    <link href="http://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/Shop/YueBing/css/index.css" />
+    <link rel="stylesheet" href="/Content/Base/font/iconfont.css?@ShiMiao.Common.Constants.ResourceVersion" />
+    <script type="text/javascript" src="/Content/Shop/YueBing/js/touchslider.js"></script>
+}
+
+<div class="wrapper wrapper-index">
+    <div class='swipe' style="width:100%;">
+        <ul id="slider">
+            <li style='display:block'><div class="wrapper-header"><img src="~/Content/Shop/YueBing/images/yb01.jpg" /></div></li>
+            <li style='display:none'><div class="wrapper-header"><img src="~/Content/Shop/YueBing/images/yb02.jpg" /></div></li>
+        </ul>
+    </div>
+    <div class="wrapper wrapper-detail">
+        <form>
+            <div>
+                <input type="hidden" name="goodsID" value="@ViewBag.goodsID" />
+            </div>
+            <div class="detail-link">
+                <div class="title">净名素月</div>
+                <div class="body">
+                    <div class="body-item1">
+                        <div class="text">月饼价格：</div><div class="text2">￥108元/盒</div>
+                    </div>
+                    <div class="body-item1">
+                        <div class="text">订购数量：</div>
+                        <div class="click-number" data-step="1" data-min="1">
+                            <a href="javascript:;" class="btn-default decrease">-</a>
+                            <input type="number" name="Amount" value="1" class="form-control number">
+                            <a href="javascript:;" class="btn-default add">+</a>
+                        </div>
+                    </div>
+                    <div class="body-item1">
+                        <input type="number" hidden name="ExtraPrice"  />
+                        <div class="text">快递区域：</div>
+                        <input type="radio" name="delivery" value="0" id="rb0" onclick="$.stone.setExtraPrice(this)" />
+                        <label for="rb0">自提</label>
+                        <input type="radio" name="delivery" value="1" id="rb1" onclick="$.stone.setExtraPrice(this)" />
+                        <label for="rb1">省内6元</label>
+                        <input type="radio" name="delivery" value="2" id="rb2" onclick="$.stone.setExtraPrice(this)" />
+                        <label for="rb2">省外8元</label>
+
+                    </div>
+                    <div class="body-item1">
+                        <div class="text1">注:订购5盒及以上享受团购价￥88元/盒;<br />　 快递费为数量乘选择的区域价格;<br />　 总价为月饼金额+快递费用。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-link">
+                <div class="title">联系方式</div>
+                <div class="body">
+                    <div class="body-item">
+                        <div class="text">功德芳名：</div>
+                        <div class="input">
+                            <input name="username" maxlength="10" />
+                        </div>
+                    </div>
+                    <div class="body-item">
+                        <div class="text">联系电话：</div>
+                        <div class="input">
+                            <input name="userphone" maxlength="11" />
+                        </div>
+                    </div>
+                    <div class="body-item">
+                        <div class="text">详细地址：</div>
+                        <div class="input">
+                            <input name="useraddress" maxlength="100" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-submit">
+                <a class="btn-submit" data-url="/Shop/YueBing/SaveOrder?oid=@ViewBag.EnOrgID" href="javascript:;" data-callback="$.stone.saveOrder" data-mask="true" onclick="$.stone.submitForm(this)">确认订购</a>
+            </div>
+        </form>
+    </div>
+    <div class="user-list">
+        <div class="js-scroller"
+             data-autoloadbottom="true"
+             data-url="/Shop/YueBing/GetOrderList?oid=@ViewBag.EnOrgID"
+             data-jstemplate="jsList"
+             data-message-none="快来订购吧">
+        </div>
+    </div>
+    <div class="wrapper-header">
+        <img src="~/Content/Shop/YueBing/images/qrcode.jpg" />
+    </div>
+</div>
+<script type="text/javascript">
+  var t3=new TouchSlider('slider',{duration:1000, direction:0, interval:5000, fullsize:true});
+</script>
+@section scripts{
+    <script src="~/Content/Shop/YueBing/js/index.js?@ShiMiao.Common.Constants.ResourceVersion"></script>
+    @Html.Partial("/Views/Shared/ThirdShared.cshtml")
+    <script>
+        $(function () {
+            $.stone.initScroller();
+            $.stone.initClickNumber();
+        });
+    </script>
+    <script type="text/html" id="jsList">
+        {{each list as item i}}
+        <div class="item">
+            {{if item.HeaderImage != ""}}
+            {{if item.IsAnonymous == "1"}}
+            <img src="~/Content/Shop/YueBing/images/default-header.png" />
+            {{else}}
+            <img src="{{item.HeaderImage}}" />
+            {{/if}}
+            {{/if}}
+            <div class="member">
+                {{if item.IsAnonymous == "1"}}
+                <div class="nickname">匿名</div>
+                {{else}}
+                <div class="nickname">{{item.NickName}}</div>
+                {{/if}}
+            </div>
+            <div class="info">
+                <div class="fee">{{item.Count}}盒</div>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+}
+

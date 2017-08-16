@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "QRCode";
+}
+<div>
+    <span id="showMsg"></span>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            var showMsg = $("#showMsg");
+            var str = location.search.split("=")[1];
+            switch(str)
+            {
+                case "1":
+                    location.href = "@Url.Content("~/Shop/YueBing/Index?oid=EFFE6510CF47EB00")";
+                    break;
+                default :
+                    showMsg.html("您使用的二维码有误");
+
+            }
+        };
+    </script>
+}
