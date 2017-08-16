@@ -43,18 +43,23 @@ namespace ShiMiao.Web.Areas.Shop.Controllers
             //大梁A 9918ac35 - a983 - 40c8 - 822a - 2a71d4866c0f
             var dla = goodsBLL.GetModel("9918ac35-a983-40c8-822a-2a71d4866c0f");
             ViewBag.dla = dla.Balance + dla.Frozen;
+            ViewBag.dlaCount = dla.Amount - dla.Balance - dla.Frozen;
             //大梁B 3a2a9ebe-9900-4ede-966f-23e343c09445
             var dlb = goodsBLL.GetModel("3a2a9ebe-9900-4ede-966f-23e343c09445");
             ViewBag.dlb = dlb.Balance + dlb.Frozen;
+            ViewBag.dlbCount = dlb.Amount - dlb.Balance - dlb.Frozen;
             //副梁A fbc6178f-ba45-4376-b0e1-fe22c36d564b
             var fla = goodsBLL.GetModel("fbc6178f-ba45-4376-b0e1-fe22c36d564b");
             ViewBag.fla = fla.Balance + fla.Frozen;
+            ViewBag.flaCount = fla.Amount - fla.Balance - fla.Frozen;
             //副梁B e49e5b82-83ce-417d-8591-aa216e195099
             var flb = goodsBLL.GetModel("e49e5b82-83ce-417d-8591-aa216e195099");
             ViewBag.flb = flb.Balance + flb.Frozen;
+            ViewBag.flbCount = flb.Amount - flb.Balance - flb.Frozen;
             //佛像 e540dac1-171f-4b75-a852-612de07a9550
             var fx = goodsBLL.GetModel("e540dac1-171f-4b75-a852-612de07a9550");
             ViewBag.fx = fx.Balance + fx.Frozen;
+            ViewBag.fxCount = fx.Amount - fx.Balance - fx.Frozen;
 
             return View();
         }
