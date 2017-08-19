@@ -32,11 +32,11 @@ namespace ShiMiao.BLL
             return dal.GetModel(goodsID);
         }
 
-        public int PayOrder(string orderID, IList<Model.m_Sell_Goods> orderGoodsList, string tranID)
+        public int PayOrderNoFrozen(string orderID, IList<Model.TD_Shop_OrderGoods> orderGoodsList, string tranID)
         {
-            foreach (Model.m_Sell_Goods orderGoods in orderGoodsList)
+            foreach (Model.TD_Shop_OrderGoods orderGoods in orderGoodsList)
             {
-                int result = dal.PayOrder(orderGoods.GoodsID, orderGoods.Amount.Value, tranID);
+                int result = dal.PayOrderNoFrozen(orderGoods.GoodsID, orderGoods.Amount.Value, tranID);
                 if (result == 0)
                 {
                     return 0;

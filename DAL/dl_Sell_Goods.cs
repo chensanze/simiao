@@ -95,7 +95,15 @@ namespace ShiMiao.DAL
                 return list;
             }
         }
-
+        public int PayOrderNoFrozen(string goodsID, int amount, string tranID)
+        {
+            string sql = "UPDATE td_sel_goods SET Amount=Amount-@Amount WHERE GoodsID=@GoodsID";
+            MySqlParameter[] parameters = {
+                                    new MySqlParameter("@GoodsID", goodsID),
+                                    new MySqlParameter("@Amount", amount)
+                        };
+            return MySqlHelperUtil.ExecuteNonQuery(tranID, sql, parameters);
+        }
         public int PayOrder(string goodsID, int amount, string tranID)
         {
             string sql = "UPDATE td_sel_goods SET Frozen=Frozen-@Amount WHERE GoodsID=@GoodsID";

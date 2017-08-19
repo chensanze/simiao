@@ -1,16 +1,18 @@
-﻿using BLL.DAL;
+﻿using ShiMiao.DAL;
+using ShiMiao.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WX.Entity;
-using WX.Entity.Pay;
 using WXPaySDK;
-using wzhis.public1;
 
 namespace BLL
 {
+   
+    public class m_return
+    {
+        public string DM { get; set; }
+        public string Msg { get; set; }
+    }
     //业务处理程序
     public class bl_BillProccess
     {
@@ -75,23 +77,18 @@ namespace BLL
                     if (totalPay == BillAmount.TotalCost && totalRefund == BillAmount.TotalRefundMoney && BillList.Count() == BillAmount.Amount)
                     {//本地对账成功  插入数据表
                         //using 帐号可使用zfb 也可在配置中获取
-                        using (CDataBase cdb = new CDataBase(System.Configuration.ConfigurationSettings.AppSettings["DefaultUser"]))
+                        dl_BillProccess dl_bill = new dl_BillProccess();
+                        if (dl_bill.insertBills(BillList))
                         {
-                            //数据库处理 插入表
-                            dl_DownloadBill dl_db = new dl_DownloadBill(cdb);
-                            if (dl_db.insertBills(BillList))
-                            {
-                                cdb.Commit();
-                                ret.DM = "SUCCESS";
-                                ret.Msg = "OK";
-                            }
-                            else
-                            {
-                                cdb.Rollback();
-                                ret.DM = "FAIL";
-                                ret.Msg = "insert record fail";
-                            }
+                            ret.DM = "SUCCESS";
+                            ret.Msg = "OK";
                         }
+                        else
+                        {
+                            ret.DM = "FAIL";
+                            ret.Msg = "insert record fail";
+                        }
+
                     }
                 }//else DM = "FAIL", Msg = "no result"
             }

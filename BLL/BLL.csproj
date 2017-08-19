@@ -90,6 +90,10 @@
       <Project>{601a81c0-43bf-4d49-8ea2-21ffb982f343}</Project>
       <Name>myAlipaySDK</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WXPaySDK\WXPaySDK.csproj">
+      <Project>{0E62FE4F-7641-44F6-A101-3615634D7635}</Project>
+      <Name>WXPaySDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

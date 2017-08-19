@@ -58,6 +58,7 @@
     <Compile Include="TD_Shop_Order_Consignee.cs" />
     <Compile Include="TD_WeiXin_Member.cs" />
     <Compile Include="TD_WeiXin_Menu.cs" />
+    <Compile Include="WXBillModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

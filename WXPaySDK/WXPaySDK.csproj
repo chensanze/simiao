@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="business\Consume.cs" />
     <Compile Include="business\DownloadBill.cs" />
     <Compile Include="business\JsApiPay.cs" />
     <Compile Include="business\OrderQuery.cs" />

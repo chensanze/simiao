@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alipay\dl_Alipay_AppInfo.cs" />
+    <Compile Include="dl_BillProccess.cs" />
     <Compile Include="dl_Sell_Goods.cs" />
     <Compile Include="dl_Shop_Order_Consignee.cs" />
     <Compile Include="Editable\TD_Donation_LeaveMsg.cs" />

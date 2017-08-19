@@ -1,4 +1,5 @@
-﻿using ShiMiao.Common;
+﻿using BLL;
+using ShiMiao.Common;
 using ShiMiao.WebCommon;
 using Stone.WeiXin;
 using System;
@@ -255,5 +256,43 @@ namespace ShiMiao.Web.Controllers
             ViewBag.BackURL = url;
             return View();
         }
+
+        public string DownloadBill(DateTime? time)
+        {
+            string where = string.Format("OrderID='{0}'", "11170815082356628102");
+            IList<Model.TD_Order_WeiXinPay> payList = weiXinPayBLL.GetList(where, "PayTime desc", null);
+            int count = payList.Count((model) => { return model.Status == 1; });
+            if (count > 0)
+            {
+                return "OK";
+            }
+            var config = WeiXinConfig.GetConfig();
+            count = payList.Count((model) => {
+                if (model.OrderID == "11170815082356628102"
+                && model.NonceStr == "81dfed2c7043440b93a0a12dd95cf580"
+                && config.AppID == "wx5e288c0ff3672fae"
+                && config.ShopID == "1466215302")
+                {
+                    return true;
+                }
+                return false;
+            });
+            if (count > 0)
+            {
+                
+            }
+            else
+            {
+               
+            }
+
+
+
+
+            if (time.HasValue) bl_BillProccess.DownloadBill(time.Value);
+            else return "Error";
+            return "success";
+        }
     }
+
 }

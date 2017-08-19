@@ -12,6 +12,7 @@ namespace ShiMiao.BLL
         private BLL.TD_Donation_Order donationOrderBLL = new BLL.TD_Donation_Order();
         private BLL.TD_Shop_Goods goodsBLL = new BLL.TD_Shop_Goods();
         private BLL.TD_Shop_Order shopOrderBLL = new BLL.TD_Shop_Order();
+        private BLL.bl_sell_goods sellGoods = new bl_sell_goods();
         public bool OrderIsPay(string orderID, int status)
         {
             return dal.OrderIsPay(orderID, status);
@@ -61,8 +62,14 @@ namespace ShiMiao.BLL
                 result = goodsBLL.PayOrder(orderID, orderGoodsList, tranID);
                 if (result == 0)
                 {
-                    MySqlHelperUtil.RollbackTran(tranID);
-                    return 0;
+                    //商品中不存在  去sell中找
+                    result =sellGoods.PayOrderNoFrozen(orderID, orderGoodsList, tranID);
+                    if(result == 0)
+                    {
+                        MySqlHelperUtil.RollbackTran(tranID);
+                        return 0;
+                    }
+                    
                 }
                 result = shopOrderBLL.PayOrder(order, tranID);
                 if (result == 0)
