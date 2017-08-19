@@ -16,6 +16,8 @@ namespace BLL
     //业务处理程序
     public class bl_BillProccess
     {
+        private static readonly ShiMiao.BLL.TD_Order_WeiXinPay weiXinPayBLL = new ShiMiao.BLL.TD_Order_WeiXinPay();
+
         public static m_return DownloadBill(DateTime _time)
         {
             /**
@@ -100,6 +102,37 @@ namespace BLL
             }
 
             return ret;
+        }
+        public static m_return CheckBill(DateTime _time)
+        {
+            dl_BillProccess dl_bill = new dl_BillProccess();
+            var bills = dl_bill.getNotCheckYet();
+
+            foreach (var bill in bills)
+            {
+                int splitIndex = bill.OutTradeNo.IndexOf("_");
+                string orderID = bill.OutTradeNo;
+                if (splitIndex > 0)
+                {
+                    orderID = bill.OutTradeNo.Substring(0, splitIndex);
+                }
+                string where = string.Format("OrderID='{0}'", orderID);
+                IList<ShiMiao.Model.TD_Order_WeiXinPay> payList = weiXinPayBLL.GetList(where, "PayTime desc", null);
+                var pay = payList.Where(a => a.OrderID == bill.OutTradeNo && a.Status == 0).ToList<ShiMiao.Model.TD_Order_WeiXinPay>().FirstOrDefault();
+                if (null == pay)
+                {
+                    continue;
+                }
+                pay.OrderID = orderID;
+                pay.WeiXinOrderID = bill.TransactionID;
+                //pay.OrderFee = bill..total_fee;
+                pay.CashFee = Convert.ToInt32(bill.Cost);
+                pay.Status = 1;
+                pay.CallBackTime = bill.TranDate;
+                weiXinPayBLL.Sync(pay, orderID);
+
+            }
+            return new m_return() { DM = "OK" };
         }
     }
 }

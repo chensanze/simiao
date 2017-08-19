@@ -185,8 +185,57 @@ namespace ShiMiao.DAL
                 MySqlHelperUtil.RollbackTran(transid);
                 throw ex;
             }
-            if(!ret) MySqlHelperUtil.RollbackTran(transid);
+            if (!ret) MySqlHelperUtil.RollbackTran(transid);
+            else MySqlHelperUtil.CommitTran(transid);
             return ret;
+        }
+        public List<WXBill> getNotCheckYet()
+        {
+            List<WXBill> _billList = new List<WXBill>();
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@" select RecordID, TranDate, AppID, MCHID, SubMCHID, DeviceID, TransactionID, OutTradeNo, UserInfo, TranType , TranSta, PayBank , Currency , Cost , EnterpriseLuckyMoney , RefundID , OutRefundNo , RefundMoney , EnterpriseRefundLuckyMoney, RefundType , RefundSta , GoodsName , MerchantData , ExFee , Rates   ");
+            strSql.Append("  from TD_Order_WeiXinPay_dz ");
+            strSql.Append(" where dzzt=@dzzt");
+            MySqlParameter[] parameters = { new MySqlParameter("@dzzt", 0) };
+            using (DbDataReader dr = MySqlHelperUtil.ExecuteReader(strSql.ToString(), parameters))
+            {
+                while (dr.HasRows)
+                {
+                    int i = -1;
+                    dr.Read();
+                    //ID,jysj,gzzhid,shh,zshh,sbh,wxddh,shddh,wbbh,jylx,jyzt,fkyh,hbzl,zje,qyhbje,wxtkdh,shtkdh,tkje,qyhbtkje,tklx,tkzt,spmc,shsjb,sxf,fl
+                    WXBill _bill = new WXBill();
+                    if (!dr.IsDBNull(++i)) _bill.RecordID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.TranDate = dr.GetDateTime(i);
+                    if (!dr.IsDBNull(++i)) _bill.AppID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.MCHID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.SubMCHID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.DeviceID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.TransactionID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.OutTradeNo = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.UserInfo = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.TranType = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.TranSta = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.PayBank = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.Currency = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.Cost = dr.GetDecimal(i);
+                    if (!dr.IsDBNull(++i)) _bill.EnterpriseLuckyMoney = dr.GetDecimal(i);
+                    if (!dr.IsDBNull(++i)) _bill.RefundID = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.OutRefundNo = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.RefundMoney = dr.GetDecimal(i);
+                    if (!dr.IsDBNull(++i)) _bill.EnterpriseRefundLuckyMoney = dr.GetDecimal(i);
+                    if (!dr.IsDBNull(++i)) _bill.RefundType = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.RefundSta = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.GoodsName = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.MerchantData = dr.GetString(i);
+                    if (!dr.IsDBNull(++i)) _bill.ExFee = dr.GetDecimal(i);
+                    if (!dr.IsDBNull(++i)) _bill.Rates = dr.GetString(i);
+                    _billList.Add(_bill);
+                }
+            }
+
+            return _billList;
         }
     }
 }
