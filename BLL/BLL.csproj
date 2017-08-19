@@ -52,6 +52,7 @@
     <Compile Include="Alipay\bl_Alipay_AppInfo.cs" />
     <Compile Include="Alipay\bl_Alipay_Token.cs" />
     <Compile Include="Alipay\bl_Alipay_UserInfo.cs" />
+    <Compile Include="bl_BillProccess.cs" />
     <Compile Include="bl_Config.cs" />
     <Compile Include="bl_sell_goods.cs" />
     <Compile Include="bl_Shop_Order_Consignee.cs" />
