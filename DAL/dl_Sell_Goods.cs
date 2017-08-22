@@ -159,5 +159,40 @@ namespace ShiMiao.DAL
                 return model;
             }
         }
+        public List<ShiMiao.Model.m_Sell_Goods> getAllModel()
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select GoodsID, OrgID, Title, Content, Amount, Balance, Price, CreateTime, OrderIndex, StateCode,Frozen,isSell  ");
+            strSql.Append("  from TD_Sell_Goods ");
+            strSql.Append(" where isSell=@isSell");
+            MySqlParameter[] parameters = {
+                                    new MySqlParameter("@isSell", 1)
+
+                        };
+            List<ShiMiao.Model.m_Sell_Goods> _list = new List<ShiMiao.Model.m_Sell_Goods>();
+            
+            using (DbDataReader dr = MySqlHelperUtil.ExecuteReader(strSql.ToString(), parameters))
+            {
+                while (dr.Read())
+                {
+                    ShiMiao.Model.m_Sell_Goods model = new ShiMiao.Model.m_Sell_Goods();
+                    int i = -1;
+                    if (dr[++i] != DBNull.Value) model.GoodsID = dr.GetString(i);
+                    if (dr[++i] != DBNull.Value) model.OrgID = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.Title = dr.GetString(i);
+                    if (dr[++i] != DBNull.Value) model.Content = dr.GetString(i);
+                    if (dr[++i] != DBNull.Value) model.Amount = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.Balance = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.Price = dr.GetDecimal(i);
+                    if (dr[++i] != DBNull.Value) model.CreateTime = dr.GetDateTime(i);
+                    if (dr[++i] != DBNull.Value) model.OrderIndex = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.StateCode = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.Frozen = dr.GetInt32(i);
+                    if (dr[++i] != DBNull.Value) model.isSell = dr.GetInt32(i);
+                    _list.Add(model);
+                }
+                return _list;
+            }
+        }
     }
 }

@@ -265,7 +265,7 @@ namespace ShiMiao.Web.Controllers
             if (ret.DM.ToUpper() == "SUCCESS")
             {//账单下载成功
                 //对账
-                bl_BillProccess.CheckBill(time.Value);
+                bl_BillProccess.CheckBill();
             }
             return "success";
         }

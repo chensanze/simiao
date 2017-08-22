@@ -93,6 +93,7 @@
     }
     .wrapper-index .user-list .item .info{
         text-align:right;
+        margin-left:25%;
     }
     .wrapper-index .user-list .item .info .time {
         font-size:12px;
@@ -450,9 +451,9 @@ label {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
-  padding-left: 30px;
+  padding-left: 20px;
   padding-right: 10px;
-  line-height: 36px;
+  line-height: 18px;
   cursor: pointer;
 }
 label::before {

@@ -67,7 +67,8 @@ namespace ShiMiao.Web.Areas.Shop.Controllers
                 {
                     HeaderImage = model.HeaderImage,
                     NickName = DisableName(model.NickName),
-                    Amount = model.Amount
+                    Amount = model.Amount,
+                    time = model.OrderTime?.ToString("yyyy-MM-dd HH:mm")
                 });
             }
             return newList;

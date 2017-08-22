@@ -10,6 +10,10 @@ namespace ShiMiao.BLL
     public class bl_sell_goods
     {
         private static readonly DAL.dl_Sell_Goods dal = new DAL.dl_Sell_Goods();
+        public List<ShiMiao.Model.m_Sell_Goods> getAllModel()
+        {
+            return dal.getAllModel();
+        }
         public int GetRecordCount(string where, IDictionary<string, object> dict)
         {
             return dal.GetRecordCount(where, dict);

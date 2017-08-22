@@ -1,5 +1,4 @@
-﻿using ShiMiao.DAL;
-using ShiMiao.Model;
+﻿using ShiMiao.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,10 @@ namespace BLL
     public class bl_BillProccess
     {
         private static readonly ShiMiao.BLL.TD_Order_WeiXinPay weiXinPayBLL = new ShiMiao.BLL.TD_Order_WeiXinPay();
+        private static readonly ShiMiao.BLL.bl_sell_goods sellGoodsBll = new ShiMiao.BLL.bl_sell_goods();
+        private static readonly ShiMiao.BLL.TD_Shop_Order shopOrderBll = new ShiMiao.BLL.TD_Shop_Order();
+        private static readonly ShiMiao.BLL.TD_Shop_OrderGoods shopOrderGoodsBll = new ShiMiao.BLL.TD_Shop_OrderGoods();
+        private static readonly ShiMiao.DAL.dl_BillProccess billProcessDal = new ShiMiao.DAL.dl_BillProccess();
 
         public static m_return DownloadBill(DateTime _time)
         {
@@ -79,8 +82,7 @@ namespace BLL
                     if (totalPay == BillAmount.TotalCost && totalRefund == BillAmount.TotalRefundMoney && BillList.Count() == BillAmount.Amount)
                     {//本地对账成功  插入数据表
                         //using 帐号可使用zfb 也可在配置中获取
-                        dl_BillProccess dl_bill = new dl_BillProccess();
-                        if (dl_bill.insertBills(BillList))
+                        if (billProcessDal.insertBills(BillList))
                         {
                             ret.DM = "SUCCESS";
                             ret.Msg = "OK";
@@ -103,35 +105,67 @@ namespace BLL
 
             return ret;
         }
-        public static m_return CheckBill(DateTime _time)
+        public static m_return CheckBill()
         {
-            dl_BillProccess dl_bill = new dl_BillProccess();
-            var bills = dl_bill.getNotCheckYet();
 
-            foreach (var bill in bills)
+            var bills = billProcessDal.getNotCheckYet();
+            if (bills == null || bills.Count <= 0) return new m_return() { DM = "ok", Msg = "No Bill" };
+            var sellGoodsIDs = sellGoodsBll.getAllModel();
+            string tranID = ShiMiao.DBUtility.MySqlHelperUtil.BeginTran();
+            try
             {
-                int splitIndex = bill.OutTradeNo.IndexOf("_");
-                string orderID = bill.OutTradeNo;
-                if (splitIndex > 0)
+                foreach (var bill in bills)
                 {
-                    orderID = bill.OutTradeNo.Substring(0, splitIndex);
-                }
-                string where = string.Format("OrderID='{0}'", orderID);
-                IList<ShiMiao.Model.TD_Order_WeiXinPay> payList = weiXinPayBLL.GetList(where, "PayTime desc", null);
-                var pay = payList.Where(a => a.OrderID == bill.OutTradeNo && a.Status == 0).ToList<ShiMiao.Model.TD_Order_WeiXinPay>().FirstOrDefault();
-                if (null == pay)
-                {
-                    continue;
-                }
-                pay.OrderID = orderID;
-                pay.WeiXinOrderID = bill.TransactionID;
-                //pay.OrderFee = bill..total_fee;
-                pay.CashFee = Convert.ToInt32(bill.Cost);
-                pay.Status = 1;
-                pay.CallBackTime = bill.TranDate;
-                weiXinPayBLL.Sync(pay, orderID);
+                    var ordergoods = shopOrderGoodsBll.GetListByOrderID(bill.OutTradeNo).FirstOrDefault();
+                    if (ordergoods == null)
+                    {
+                        billProcessDal.updateBillDZZTByID(bill.RecordID, 9, tranID);
+                        continue;
+                    }
+                    int count = sellGoodsIDs.Count((m) =>
+                    {
+                        if (m.GoodsID == ordergoods.GoodsID)
+                        {
+                            return true;
+                        }
+                        return false;
+                    });
+                    if (count <= 0)
+                    {
+                        billProcessDal.updateBillDZZTByID(bill.RecordID, 2, tranID);
+                        continue;
+                    }
 
+
+                    //查找订单
+                    var shopOrder = shopOrderBll.GetModel(ordergoods.OrderID);
+                    if (shopOrder?.IsPay == "0")
+                    {
+                        shopOrder.IsPay = "1";
+                        shopOrder.PayTime = bill.TranDate;
+                        if (shopOrderBll.PayOrder(shopOrder, tranID) == 1)
+                        {
+                            if (!billProcessDal.updateBillDZZTByID(bill.RecordID, 1, tranID))
+                            {
+                                throw new Exception("对账失败");
+                            }
+                        }
+                        else throw new Exception("更新失败");
+                    }
+                    else
+                    {
+                        billProcessDal.updateBillDZZTByID(bill.RecordID, 2, tranID);
+                        continue;
+                    }
+                }
             }
+            catch
+            {
+                ShiMiao.DBUtility.MySqlHelperUtil.RollbackTran(tranID);
+                return new m_return() { DM = "error" };
+            }
+            ShiMiao.DBUtility.MySqlHelperUtil.CommitTran(tranID);
+
             return new m_return() { DM = "OK" };
         }
     }

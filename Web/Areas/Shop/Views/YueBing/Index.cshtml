@@ -40,9 +40,9 @@
                         <input type="number" hidden name="ExtraPrice"  />
                         <div class="text">快递区域：</div>
                         <input type="radio" name="delivery" value="0" id="rb0" onclick="$.stone.setExtraPrice(this)" />
-                        <label for="rb0">自提</label>
+                        <label for="rb0">自提</label><br />
                         <input type="radio" name="delivery" value="1" id="rb1" onclick="$.stone.setExtraPrice(this)" />
-                        <label for="rb1">省内6元</label>
+                        <label for="rb1">省内6元</label><br />
                         <input type="radio" name="delivery" value="2" id="rb2" onclick="$.stone.setExtraPrice(this)" />
                         <label for="rb2">省外8元</label>
 
@@ -122,7 +122,8 @@
                 {{/if}}
             </div>
             <div class="info">
-                <div class="fee">{{item.Count}}盒</div>
+                <div class="fee">{{item.Amount}}盒</div>
+                <div class="time">{{item.time}}</div>
             </div>
         </div>
         {{/each}}
