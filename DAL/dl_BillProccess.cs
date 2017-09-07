@@ -112,10 +112,34 @@ namespace ShiMiao.DAL
             strSql.Append(" GoodsName = @GoodsName , ");
             strSql.Append(" MerchantData = @MerchantData , ");
             strSql.Append(" ExFee = @ExFee , ");
-            strSql.Append(" Rates = @Rates  ");
+            strSql.Append(" Rates = @Rates ,dzzt=0  ");
             strSql.Append(" where RecordID=@RecordID ");
             MySqlParameter[] parameters = {
-                        new MySqlParameter("@RecordID",_recordid)
+                new MySqlParameter("@RecordID",_recordid),
+                new MySqlParameter("@TranDate",_bill.TranDate),
+                new MySqlParameter("@AppID",_bill.AppID),
+                new MySqlParameter("@MCHID",_bill.MCHID),
+                new MySqlParameter("@SubMCHID",_bill.SubMCHID),
+                new MySqlParameter("@DeviceID",_bill.DeviceID),
+                new MySqlParameter("@TransactionID",_bill.TransactionID),
+                new MySqlParameter("@OutTradeNo",_bill.OutTradeNo),
+                new MySqlParameter("@UserInfo",_bill.UserInfo),
+                new MySqlParameter("@TranType",_bill.TranType),
+                new MySqlParameter("@TranSta",_bill.TranSta),
+                new MySqlParameter("@PayBank",_bill.PayBank),
+                new MySqlParameter("@Currency",_bill.Currency),
+                new MySqlParameter("@Cost",_bill.Cost),
+                new MySqlParameter("@EnterpriseLuckyMoney",_bill.EnterpriseLuckyMoney),
+                new MySqlParameter("@RefundID",_bill.RefundID),
+                new MySqlParameter("@OutRefundNo",_bill.OutRefundNo),
+                new MySqlParameter("@RefundMoney",_bill.RefundMoney),
+                new MySqlParameter("@EnterpriseRefundLuckyMoney",_bill.EnterpriseRefundLuckyMoney),
+                new MySqlParameter("@RefundType",_bill.RefundType),
+                new MySqlParameter("@RefundSta",_bill.RefundSta),
+                new MySqlParameter("@GoodsName",_bill.GoodsName),
+                new MySqlParameter("@MerchantData",_bill.MerchantData),
+                new MySqlParameter("@ExFee",_bill.ExFee),
+                new MySqlParameter("@Rates",_bill.Rates)
             };
             if (string.IsNullOrEmpty(_transid))
                 return MySqlHelperUtil.ExecuteNonQuery(strSql.ToString(), parameters) == 1;

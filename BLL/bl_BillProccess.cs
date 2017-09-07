@@ -159,7 +159,7 @@ namespace BLL
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 ShiMiao.DBUtility.MySqlHelperUtil.RollbackTran(tranID);
                 return new m_return() { DM = "error" };

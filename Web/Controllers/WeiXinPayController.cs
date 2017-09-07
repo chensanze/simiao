@@ -259,15 +259,19 @@ namespace ShiMiao.Web.Controllers
 
         public string DownloadBill(DateTime? time)
         {
-            if (!time.HasValue) 
-             return "Error";
+            string resault= "Error";
+            if (!time.HasValue)
+                return resault;
             var ret = bl_BillProccess.DownloadBill(time.Value);
             if (ret.DM.ToUpper() == "SUCCESS")
             {//账单下载成功
                 //对账
-                bl_BillProccess.CheckBill();
+                var r = bl_BillProccess.CheckBill();
+                if (r.DM.ToLower() == "ok") resault = "success";
+                else resault = "fail";
             }
-            return "success";
+            else resault = "fail";
+            return time.Value.ToString("yyyy-MM-dd")+":"+resault;
         }
     }
 
